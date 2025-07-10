@@ -1,0 +1,46 @@
+# Environnements virtuels
+env/
+venv/
+ENV/
+.venv/
+
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de données SQLite
+*.sqlite3
+
+# Clés secrètes, configs locales
+.env
+*.env
+
+# Fichiers Django spécifiques
+db.sqlite3
+media/
+staticfiles/
+
+# Logs
+*.log
+
+# Fichiers temporaires système/IDE
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Cache pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# JetBrains (PyCharm)
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Migrations inutiles (optionnel, si tu veux pas les suivre avant prod)
+# **/migrations/*.py
+# !**/migrations/__init__.py
