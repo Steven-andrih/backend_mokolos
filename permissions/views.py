@@ -16,12 +16,18 @@ class PermissionTranslationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class TotalPermissionsUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         user = request.user
         total_permission_pending = PermissionTranslation.objects.filter(permission__user = user,status="pending").count()
         total_permission_approved = PermissionTranslation.objects.filter(permission__user = user,status="approved").count()
         total_permission_rejected = PermissionTranslation.objects.filter(permission__user = user,status="rejected").count()
 
-        return Response({"total_permission_pending": total_permission_pending,
-                        'total_permission_approved': total_permission_approved,
-                        'total_permission_rejected':total_permission_rejected})
+        return Response(
+            {
+            "total_permission_pending": total_permission_pending,
+            'total_permission_approved': total_permission_approved,
+            'total_permission_rejected':total_permission_rejected
+            }
+                        )
