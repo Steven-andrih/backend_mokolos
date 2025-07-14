@@ -13,9 +13,13 @@ import random
 import string
 from .utils import send_invitation_email
 from .models import User
-
+from drf_spectacular.utils import extend_schema
 
 class RegisterView(APIView):
+    @extend_schema(
+        request=RegisterSerializer,
+        responses={201: RegisterSerializer}
+    )
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,6 +35,10 @@ class MeView(APIView):
         return Response(serializer.data)
 
 class CreateUserByRhView(APIView):
+    @extend_schema(
+        request=CreateUserByRhSerializer,
+        responses={201: CreateUserByRhSerializer}
+    )
     def post(self, request):
         data = request.data.copy()
 

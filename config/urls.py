@@ -3,13 +3,13 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from users.views import RegisterView, MeView, CreateUserByRhView    
-from permissions.views import PermissionViewSet, PermissionTranslationViewSet
+from permissions.views import PermissionViewSet
+from holydays.views import HolydayViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 router = DefaultRouter()
 router.register(r'permissions', PermissionViewSet)
-router.register(r'permissionsTranslation', PermissionTranslationViewSet)
-
+router.register(r'holyday', HolydayViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

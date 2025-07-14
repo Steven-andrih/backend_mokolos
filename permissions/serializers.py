@@ -1,14 +1,9 @@
 from rest_framework import serializers
-from .models import Permission, PermissionTranslation
+from .models import Permission
 
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        fields = '__all__'
-
-class PermissionTranslationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PermissionTranslation
-        fields = '__all__'
-
-    
+        fields = ['id', 'start_date', 'end_date', 'beginning_hour', 'end_time', 'nature', 'status']
+        read_only_fields = ['status']
+                                                                
