@@ -31,6 +31,7 @@ from baseModels.models import BaseModel
 
 class Permission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="permissions")
+    request_date = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField()  # On laisse l’utilisateur choisir
     end_date = models.DateField()
     beginning_hour = models.TimeField()

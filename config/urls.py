@@ -27,8 +27,8 @@ urlpatterns = [
 
     path('api/', include(router.urls)),
 
-    path("api/permission/rh", include('permissions.urls')),
-    path("api/holyday/rh", include('holydays.urls')),
+    path("api/permission/rh/", include('permissions.urls')),
+    path("api/holyday/rh/", include('holydays.urls')),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

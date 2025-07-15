@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from .serializers import PermissionSerializer, ValidatePermissionSerializer
 from .models import Permission
 from drf_spectacular.utils import extend_schema
-from .permissions import CanValidatePermissionOrHoliday
+from apiPermission.permissions import *
 from rest_framework import status
 
 # Create your views here.
@@ -47,3 +47,12 @@ class ValidatePermissionView(APIView):
             permission = serializer.save()
             return Response({"message": "Permissions valide avec succes ✅"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GetPermissionView(APIView):
+    permission_classes = [IsRh]
+
+    def get(self, request):
+        permissions = Permission.objects.all().order_by("request_date")
+        self.check_permissions(request)
+        serializer = PermissionSerializer(permissions, many=True)
+        return Response(serializer.data)
