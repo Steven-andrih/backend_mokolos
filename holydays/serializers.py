@@ -7,3 +7,7 @@ class HolydaySerializer(serializers.ModelSerializer):
         fields = ['id', 'start_date', 'end_date', 'leave_reasons', 'status', 'total']
         read_only_fields = ['status', 'total']
 
+class ValidateHolydaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Holyday
+        fields = ['status']

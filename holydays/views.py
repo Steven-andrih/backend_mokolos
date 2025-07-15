@@ -1,8 +1,11 @@
 from rest_framework.response import Response
 from rest_framework import permissions, viewsets
 from rest_framework.views import APIView
+from rest_framework import status
+from drf_spectacular.utils import extend_schema
+from permissions.permissions import CanValidatePermissionOrHoliday
 from .models import Holyday
-from .serializers import HolydaySerializer
+from .serializers import HolydaySerializer, ValidateHolydaySerializer
 
 class HolydayViewSet(viewsets.ModelViewSet):
     queryset = Holyday.objects.all()
@@ -14,3 +17,20 @@ class HolydayViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class ValidateHolydayView(APIView):
+    permission_classes = [CanValidatePermissionOrHoliday]
+
+    @extend_schema(
+        request=ValidateHolydaySerializer,
+        responses={201: ValidateHolydaySerializer}
+    )
+    def patch(self, request, pk):
+        permission = Holyday.objects.get(pk=pk)
+        self.check_object_permissions(request, permission)
+
+        serializer = ValidateHolydaySerializer(permission, data = request.data, partial=True)
+        if serializer.is_valid():
+            permission = serializer.save()
+            return Response({"message": "Congé valide avec succes ✅"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

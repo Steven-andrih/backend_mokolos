@@ -12,6 +12,7 @@ router.register(r'permissions', PermissionViewSet)
 router.register(r'holyday', HolydayViewSet)
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -26,10 +27,10 @@ urlpatterns = [
 
     path('api/', include(router.urls)),
 
-    path("api/permission_user/", include('permissions.urls')),
+    path("api/permission/rh", include('permissions.urls')),
+    path("api/holyday/rh", include('holydays.urls')),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    # Optional UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 

@@ -46,6 +46,9 @@ class Holyday(models.Model):
     )
     locale = models.CharField(max_length=10, default='fr')
 
+    def __str__(self) :
+        return f"Conge demande le {self.request_date}, du {self.start_date} au {self.end_date}, total: {self.total} Jours"
+
     def save(self, *args, **kwargs):
         if self.start_date and self.end_date:
             self.total = (self.end_date - self.start_date).days + 1
