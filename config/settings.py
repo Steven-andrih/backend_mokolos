@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'djoser',
     'drf_spectacular',
     'drf_spectacular_sidecar',  # required for Django collectstatic discovery
+    'corsheaders',
 
 
     'users',
@@ -51,6 +52,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Config for CORS 
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -144,8 +149,6 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
@@ -201,3 +204,9 @@ SPECTACULAR_SETTINGS = {
     'REDOC_DIST': 'SIDECAR',
     # OTHER SETTINGS
 }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
