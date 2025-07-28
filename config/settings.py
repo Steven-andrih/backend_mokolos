@@ -150,6 +150,8 @@ from datetime import timedelta
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=120),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=120),
 }
 
 AUTH_USER_MODEL = 'users.User'  # on va créer un User personnalisé
