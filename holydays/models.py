@@ -2,7 +2,7 @@ from django.db import models
 from baseModels.models import BaseModel
 from users.models import User
 from django.utils import timezone
-class Holyday(models.Model):
+class Holyday(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='holydays')
     request_date = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField()

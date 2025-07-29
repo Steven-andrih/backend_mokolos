@@ -29,13 +29,13 @@ from baseModels.models import BaseModel
 #     def __str__(self):
 #         return f"Permission translation : {self.permission}, Nature : {self.nature_permission}"
 
-class Permission(models.Model):
+class Permission(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="permissions")
     request_date = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField()  # On laisse l’utilisateur choisir
     end_date = models.DateField()
-    beginning_hour = models.TimeField()
-    end_time = models.TimeField()
+    beginning_hour = models.DateTimeField()
+    end_time = models.DateTimeField()
     nature = models.CharField(max_length=255)
     status = models.CharField(
         max_length=20,
