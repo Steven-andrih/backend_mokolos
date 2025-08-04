@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from users.views import RegisterView, MeView, CreateUserByRhView    
+from users.views import RegisterView, GetAlluserView, CreateUserByRhView    
 from permissions.views import PermissionViewSet
 from holydays.views import HolydayViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
@@ -20,7 +20,7 @@ urlpatterns = [
 
     path('api/register/', RegisterView.as_view(), name='register'),
     path('api/create_employer/', CreateUserByRhView.as_view(), name='create_employer'),
-    # path('api/me/', MeView.as_view(), name='me'),
+    # path('api/user/rh/', GetAlluserView.as_view(), name='get_employee'),
 
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.jwt')),
@@ -29,6 +29,7 @@ urlpatterns = [
 
     path("api/permissions/rh/", include('permissions.urls')),
     path("api/holyday/rh/", include('holydays.urls')),
+    path("api/user/rh/", include('users.urls')),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

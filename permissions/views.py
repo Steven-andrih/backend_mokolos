@@ -6,6 +6,9 @@ from .models import Permission
 from drf_spectacular.utils import extend_schema
 from apiPermission.permissions import *
 from rest_framework import status
+from users.utils import send_response_permission_email
+from users.models import User
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 # class RegisterView(APIView):
@@ -39,13 +42,17 @@ class ValidatePermissionView(APIView):
         responses={201: ValidatePermissionSerializer}
     )
     def patch(self, request, pk):
-        permission = Permission.objects.get(pk=pk)
+        # permission = Permission.objects.get(pk=pk)
+        permission = get_object_or_404(Permission, pk=pk)
+
         self.check_object_permissions(request, permission)
+        user = User.objects.get(pk=permission.user.id)
 
         serializer = ValidatePermissionSerializer(permission, data = request.data, partial=True)
         if serializer.is_valid():
             permission = serializer.save()
-            return Response({"message": "Permissions valide avec succes ✅"}, status=status.HTTP_201_CREATED)
+            send_response_permission_email(user, permission)
+            return Response({"message": "Permissions mise à jour avec succes ✅"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetPermissionView(APIView):

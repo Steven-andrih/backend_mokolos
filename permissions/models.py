@@ -45,4 +45,4 @@ class Permission(BaseModel):
     locale = models.CharField(max_length=10, default='fr')  # Optionnel, mais OK pour plus tard
 
     def __str__(self):
-        return f"{self.user} — Permission {self.nature} du {self.start_date} au {self.end_date}"
+        return f"{self.user} — Permission {self.nature} du {self.start_date} au {self.end_date} ,id : {self.id}"

@@ -8,6 +8,10 @@ from .models import Holyday
 from .serializers import HolydaySerializer, ValidateHolydaySerializer, CalculateHolydaySerializer
 from .utils import getHolydayDuration
 from datetime import datetime
+from users.utils import send_response_conge_email
+from users.models import User
+from django.shortcuts import get_object_or_404
+
 class HolydayViewSet(viewsets.ModelViewSet):
     queryset = Holyday.objects.all()
     serializer_class = HolydaySerializer
@@ -27,13 +31,18 @@ class ValidateHolydayView(APIView):
         responses={201: ValidateHolydaySerializer}
     )
     def patch(self, request, pk):
-        permission = Holyday.objects.get(pk=pk)
-        self.check_object_permissions(request, permission)
+        # holyday = Holyday.objects.get(pk=pk)
+        holyday = get_object_or_404(Holyday, pk=pk)
 
-        serializer = ValidateHolydaySerializer(permission, data = request.data, partial=True)
+        self.check_object_permissions(request, holyday)
+
+        user = User.objects.get(pk=holyday.user.id)
+
+        serializer = ValidateHolydaySerializer(holyday, data = request.data, partial=True)
         if serializer.is_valid():
-            permission = serializer.save()
-            return Response({"message": "Congé valide avec succes ✅"}, status=status.HTTP_201_CREATED)
+            holyday = serializer.save()
+            send_response_conge_email(user, holyday)
+            return Response({"message": "Congé mise à jour avec succes ✅"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class GetHolydayView(APIView):

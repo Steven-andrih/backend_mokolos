@@ -14,6 +14,7 @@ import string
 from .utils import send_invitation_email
 from .models import User
 from drf_spectacular.utils import extend_schema
+from apiPermission.permissions import IsRh
 
 class RegisterView(APIView):
     @extend_schema(
@@ -34,6 +35,14 @@ class MeView(APIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
+class GetAlluserView(APIView):
+    permission_classes = [IsRh]
+
+    def get(self, request):
+        users = User.objects.all()
+        self.check_permissions(request)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 class CreateUserByRhView(APIView):
     @extend_schema(
         request=CreateUserByRhSerializer,
@@ -46,8 +55,14 @@ class CreateUserByRhView(APIView):
         email = data.get('email')
         role = data.get('role')
         position = data.get('position')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        description = data.get('description')
 
         user = User(
+            first_name = first_name,
+            last_name = last_name,
+            description = description,
             email=email,
             role=role,
             position=position,
