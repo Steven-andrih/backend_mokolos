@@ -49,8 +49,8 @@ class GetHolydayView(APIView):
     permission_classes = [IsRh]
 
     def get(self, request):
-        holydays = Holyday.objects.all().order_by("request_date")
         self.check_permissions(request)
+        holydays = Holyday.objects.all().order_by("request_date")
         serializer = HolydaySerializer(holydays, many=True)
         return Response(serializer.data)
     

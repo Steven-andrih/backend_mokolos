@@ -42,7 +42,7 @@ class Permission(BaseModel):
         choices=[('pending', 'En attente'), ('approved', 'Approuvé'), ('rejected', 'Rejeté')],
         default='pending'
     )
-    locale = models.CharField(max_length=10, default='fr')  # Optionnel, mais OK pour plus tard
+    locale = models.CharField(max_length=10, default='fr')  
 
     def __str__(self):
         return f"{self.user} — Permission {self.nature} du {self.start_date} au {self.end_date} ,id : {self.id}"

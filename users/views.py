@@ -15,7 +15,8 @@ from .utils import send_invitation_email
 from .models import User
 from drf_spectacular.utils import extend_schema
 from apiPermission.permissions import IsRh
-
+from django.shortcuts import get_object_or_404
+from rest_framework_simplejwt.authentication import JWTAuthentication
 class RegisterView(APIView):
     @extend_schema(
         request=RegisterSerializer,
@@ -78,4 +79,31 @@ class CreateUserByRhView(APIView):
             "email": user.email,
             "generated_password": random_password
         }, status=status.HTTP_201_CREATED)
+    
+class UpdateUserByRhView(APIView):
+    @extend_schema(
+        request=CreateUserByRhSerializer,
+        responses={200: CreateUserByRhSerializer}
+    )
+    def patch(self, request, pk):
+        user = User.objects.get(pk=pk)
 
+        serializer = CreateUserByRhSerializer(user, data = request.data, partial=True)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({"message": "User mise à jour avec succes ✅"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteUserByRhView(APIView):
+    permission_classes = [IsAuthenticated, IsRh]
+    authentication_classes = [JWTAuthentication]
+    
+    def delete(self, request, pk):
+        self.check_permissions(request)
+        user = User.objects.get(pk=pk)
+        user.delete()
+        return Response({
+            "message": "Utilisateur supprimer avec succès ✅",
+        }, status=status.HTTP_200_OK)
+
+        

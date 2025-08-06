@@ -17,7 +17,7 @@ class Holyday(BaseModel):
     locale = models.CharField(max_length=10, default='fr')
 
     def __str__(self) :
-        return f"Conge demande le {self.request_date}, du {self.start_date} au {self.end_date}, total: {self.total} Jours"
+        return f"Conge demande le {self.request_date}, du {self.start_date} au {self.end_date}, total: {self.total} Jours , id :{self.id}"
 
         # def save(self, *args, **kwargs):
         #     if self.start_date and self.end_date:
