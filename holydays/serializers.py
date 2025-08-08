@@ -5,7 +5,7 @@ class HolydaySerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     class Meta:
         model = Holyday
-        fields = ['id', 'request_date', 'start_date', 'end_date', 'leave_reasons', 'status', 'total', 'user']
+        fields = ['id', 'request_date', 'start_date', 'end_date', 'leave_reasons', 'status', 'total', 'user','created_at', "updated_at"]
         read_only_fields = ['status']
 
 class ValidateHolydaySerializer(serializers.ModelSerializer):

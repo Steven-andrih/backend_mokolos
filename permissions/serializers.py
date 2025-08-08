@@ -5,7 +5,7 @@ class PermissionSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     class Meta:
         model = Permission
-        fields = ['id', 'start_date', 'end_date', 'beginning_hour', 'end_time', 'nature', 'status', 'user']
+        fields = ['id', 'start_date', 'end_date', 'beginning_hour', 'end_time', 'nature', 'status', 'user', 'created_at', "updated_at"]
         read_only_fields = ['status']
 
 class ValidatePermissionSerializer(serializers.ModelSerializer):

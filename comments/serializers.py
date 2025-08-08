@@ -22,7 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'user', 'holyday', 'permission']
+        fields = ['id', 'content', 'user', 'holyday', 'permission','created_at', "updated_at"]
 
     def validate(self, data):
         if not data.get('holyday') and not data.get('permission'):
@@ -37,7 +37,7 @@ class GetHolydayCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'user', 'holyday']
+        fields = ['id', 'content', 'user', 'holyday','created_at', "updated_at"]
 
 class GetPermissionCommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -45,4 +45,4 @@ class GetPermissionCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'user', 'permission']
+        fields = ['id', 'content', 'user', 'permission','created_at', "updated_at"]
