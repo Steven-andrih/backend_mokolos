@@ -11,7 +11,7 @@ from datetime import datetime
 from users.utils import send_response_conge_email
 from users.models import User
 from django.shortcuts import get_object_or_404
-
+from datetime import date
 class HolydayViewSet(viewsets.ModelViewSet):
     queryset = Holyday.objects.all()
     serializer_class = HolydaySerializer
@@ -80,3 +80,16 @@ class CalculateHolydayView(APIView):
             "message": "Durée de congés calculée avec succès ✅",
             "total_days": total_days
         }, status=status.HTTP_201_CREATED)
+
+class GetTodayHolydayView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @extend_schema(
+        request=HolydaySerializer,
+        responses={200: HolydaySerializer}
+    )
+    def get(self, request):
+        current_date = date.today()
+        holydays = Holyday.objects.filter(status='approved', start_date__lte=current_date, end_date__gte=current_date)
+        serializer = HolydaySerializer(holydays, many=True)
+        return Response(serializer.data)

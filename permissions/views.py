@@ -9,19 +9,7 @@ from rest_framework import status
 from users.utils import send_response_permission_email
 from users.models import User
 from django.shortcuts import get_object_or_404
-
-# Create your views here.
-# class RegisterView(APIView):
-#     @extend_schema(
-#         request=RegisterSerializer,
-#         responses={201: RegisterSerializer}
-#     )
-#     def post(self, request):
-#         serializer = RegisterSerializer(data=request.data)
-#         if serializer.is_valid():
-#             user = serializer.save()
-#             return Response({"message": "Utilisateur créé avec succès ✅"}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from datetime import date
 
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
@@ -61,5 +49,18 @@ class GetPermissionView(APIView):
     def get(self, request):
         permissions = Permission.objects.all().order_by("request_date")
         self.check_permissions(request)
+        serializer = PermissionSerializer(permissions, many=True)
+        return Response(serializer.data)
+
+class GetTodayPermissionView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @extend_schema(
+        request=PermissionSerializer,
+        responses={200: PermissionSerializer}
+    )
+    def get(self, request):
+        current_date = date.today()
+        permissions = Permission.objects.filter(status='approved', start_date__lte=current_date, end_date__gte=current_date)
         serializer = PermissionSerializer(permissions, many=True)
         return Response(serializer.data)
