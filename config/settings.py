@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.simple_history",
+    "simple_history",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,12 +50,24 @@ INSTALLED_APPS = [
 
 
     'users',
+
     'permissions',
     'holydays',
     'comments',
+
+    'abouts',
+    'banners',
+    'contacts',
+    'faqs',
+    'sections',
+    'services',
+    'siteImages',
+    'technologys',
+    'core_admin',
 ]
 
 MIDDLEWARE = [
+    'simple_history.middleware.HistoryRequestMiddleware',
     # Config for CORS 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -213,3 +228,146 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.templatetags.static import static
+
+# === Fonctions pour badges dynamiques ===
+
+def badge_images(request):
+    """Nombre total d'images"""
+    return SiteImage.objects.count()
+
+def badge_contacts_non_lus(request):
+    """Nombre de contacts non lus (à adapter selon ton modèle)"""
+    return Contact.objects.filter(is_read=False).count() if hasattr(Contact, 'is_read') else Contact.objects.count()
+
+def badge_banners(request):
+    """Nombre de bannières actives"""
+    return Banner.objects.filter(auto_play=True).count()
+
+def badge_services(request):
+    """Nombre total de services"""
+    return Service.objects.count()
+
+
+# === CONFIG UNFOLD ===
+
+UNFOLD = {
+    "SITE_TITLE": "Administration Mokolos",
+    "SITE_HEADER": "Mokolos Admin",
+    "SITE_SUBHEADER": "Tableau de bord",
+    "SITE_SYMBOL": "dashboard",
+    "SITE_DROPDOWN": [
+            {
+                "icon": "diamond",
+                "title": _("Ouvrir le site MOKOLOS"),
+                "link": "https://example.com",
+            },
+    ],
+        "SITE_URL": "https://example.com",
+    
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+
+        "navigation": [
+            # ==== MÉDIAS ====
+            {
+                "title": _("Médias"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Images"),
+                        "icon": "image",
+                        "link": reverse_lazy("admin:siteImages_siteimage_changelist"),
+                        "badge": badge_images,
+                    },
+                ],
+            },
+
+            # ==== CONTENU VITRINE ====
+            {
+                "title": _("Contenu Vitrine"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("About"),
+                        "icon": "info",
+                        "link": reverse_lazy("admin:abouts_about_changelist"),
+                    },
+                    {
+                        "title": _("About Traductions"),
+                        "icon": "translate",
+                        "link": reverse_lazy("admin:abouts_abouttranslation_changelist"),
+                    },
+                    {
+                        "title": _("Bannières"),
+                        "icon": "slideshow",
+                        "link": reverse_lazy("admin:banners_banner_changelist"),
+                        "badge": badge_banners,
+                    },
+                    {
+                        "title": _("Bannière Items"),
+                        "icon": "image",
+                        "link": reverse_lazy("admin:banners_banneritem_changelist"),
+                    },
+                    {
+                        "title": _("Services"),
+                        "icon": "build",
+                        "link": reverse_lazy("admin:services_service_changelist"),
+                        "badge": badge_services,
+                    },
+                    {
+                        "title": _("Services Traductions"),
+                        "icon": "translate",
+                        "link": reverse_lazy("admin:services_servicetranslation_changelist"),
+                    },
+                    {
+                        "title": _("Sections"),
+                        "icon": "view_agenda",
+                        "link": reverse_lazy("admin:sections_section_changelist"),
+                    },
+                    {
+                        "title": _("Sections Traductions"),
+                        "icon": "translate",
+                        "link": reverse_lazy("admin:sections_sectiontranslation_changelist"),
+                    },
+                    {
+                        "title": _("FAQ"),
+                        "icon": "help",
+                        "link": reverse_lazy("admin:faqs_faq_changelist"),
+                    },
+                    {
+                        "title": _("FAQ Traductions"),
+                        "icon": "translate",
+                        "link": reverse_lazy("admin:faqs_faqtranslation_changelist"),
+                    },
+                    {
+                        "title": _("Technologies"),
+                        "icon": "memory",
+                        "link": reverse_lazy("admin:technologys_technology_changelist"),
+                    },
+                ],
+            },
+
+            # ==== FORMULAIRES ====
+            {
+                "title": _("Formulaires"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Contacts"),
+                        "icon": "contact_mail",
+                        "link": reverse_lazy("admin:contacts_contact_changelist"),
+                        "badge": badge_contacts_non_lus,
+                    },
+                ],
+            },
+        ],
+    },
+}
