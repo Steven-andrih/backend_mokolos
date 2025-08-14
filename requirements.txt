@@ -6,6 +6,9 @@ charset-normalizer==3.4.2
 cryptography==45.0.5
 defusedxml==0.7.1
 Django==5.2.4
+django-cors-headers==4.7.0
+django-simple-history==3.10.1
+django-unfold==0.64.2
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 djoser==2.3.1
