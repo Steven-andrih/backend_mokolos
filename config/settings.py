@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'permissions',
     'holydays',
     'comments',
+    'solds',
 
     'abouts',
     'banners',

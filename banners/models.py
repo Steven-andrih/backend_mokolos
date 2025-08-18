@@ -11,6 +11,9 @@ class Banner(BaseModel):
     cycle_navigation = models.BooleanField(default=False)
     index_banner = models.IntegerField()
 
+    def __str__(self):
+        return f"Banner : {self.id}"
+
 class BannerItem(BaseModel):
     banner = models.ForeignKey(Banner, on_delete=models.CASCADE, related_name="items")
     image = models.ForeignKey(SiteImage, on_delete=models.SET_NULL, null=True, blank=True)

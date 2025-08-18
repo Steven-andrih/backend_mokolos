@@ -6,10 +6,12 @@ from users.views import RegisterView, GetAlluserView, CreateUserByRhView
 from permissions.views import PermissionViewSet
 from holydays.views import HolydayViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from solds.views import SoldViewSet
 
 router = DefaultRouter()
 router.register(r'permissions', PermissionViewSet)
 router.register(r'holyday', HolydayViewSet)
+router.register(r'sold', SoldViewSet)
 
 urlpatterns = [
 
@@ -31,6 +33,7 @@ urlpatterns = [
     path("api/holyday/rh/", include('holydays.urls')),
     path("api/user/rh/", include('users.urls')),
     path("api/comment/", include('comments.urls')),
+    path("api/sold/", include('solds.urls')),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

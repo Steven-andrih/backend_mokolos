@@ -12,6 +12,9 @@ from users.utils import send_response_conge_email
 from users.models import User
 from django.shortcuts import get_object_or_404
 from datetime import date
+from solds.models import Sold
+from rest_framework.exceptions import ValidationError
+
 class HolydayViewSet(viewsets.ModelViewSet):
     queryset = Holyday.objects.all()
     serializer_class = HolydaySerializer
@@ -21,8 +24,18 @@ class HolydayViewSet(viewsets.ModelViewSet):
         return Holyday.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        year = date.today().year
+        holydayTotal = int(self.request.data.get('total') or 0)
 
+        sold = Sold.objects.filter(user=self.request.user, year=year).first()
+        if not sold:
+            sold = Sold.objects.create(user=self.request.user, year=year)
+
+        if holydayTotal > (sold.sold or 0):
+            raise ValidationError({"message": "Oops ! Votre solde de congé est inférieur à votre demande."})
+
+        serializer.save(user=self.request.user, sold=sold)
+    
 class ValidateHolydayView(APIView):
     permission_classes = [CanValidatePermissionOrHoliday]
 
@@ -38,10 +51,17 @@ class ValidateHolydayView(APIView):
 
         user = User.objects.get(pk=holyday.user.id)
 
+        if(holyday.type == 'annual_leave') :
+            sold = get_object_or_404(Sold, pk=holyday.sold.id)
+            userSold = int(sold.sold or 0)
+            holydayTotal = int(holyday.total or 0)
+            sold.sold = userSold - holydayTotal
+            sold.save()
+
         serializer = ValidateHolydaySerializer(holyday, data = request.data, partial=True)
         if serializer.is_valid():
             holyday = serializer.save()
-            send_response_conge_email(user, holyday)
+            # send_response_conge_email(user, holyday)
             return Response({"message": "Congé mise à jour avec succes ✅"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

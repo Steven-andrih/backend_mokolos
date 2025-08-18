@@ -39,7 +39,7 @@ class ValidatePermissionView(APIView):
         serializer = ValidatePermissionSerializer(permission, data = request.data, partial=True)
         if serializer.is_valid():
             permission = serializer.save()
-            send_response_permission_email(user, permission)
+            # send_response_permission_email(user, permission)
             return Response({"message": "Permissions mise à jour avec succes ✅"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

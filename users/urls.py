@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GetAlluserView, UpdateUserByRhView, DeleteUserByRhView, TodayEmployeeView, CongesPermissionsStatsView, StatusDistributionView
+from .views import GetAlluserView, UpdateUserByRhView, DeleteUserByRhView, TodayEmployeeView, CongesPermissionsStatsView, StatusDistributionView, StatusDistributionEmployeeView
 
 urlpatterns = [
     path('employees/', GetAlluserView.as_view(), name='get_all_users'),
@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('stats/conges-permissions/', CongesPermissionsStatsView.as_view(), name='stats-conges-permissions'),
     path('stats/status-distribution/', StatusDistributionView.as_view(), name='status-distribution'),
+    path('stats/status-distribution_employee/<int:pk>/', StatusDistributionEmployeeView.as_view(), name='status-distribution_employee'),
+
 
 ]
 

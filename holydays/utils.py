@@ -17,3 +17,5 @@ def getHolydayDuration(weekEndOption, startDate, endDate):
                 total += 1
             current_day += timedelta(days=1)
         return total
+
+

@@ -22,10 +22,11 @@ from django.db.models import Q
 from django.utils.timezone import now
 from django.db.models import Count, Q
 from collections import OrderedDict
+from solds.models import Sold
 
 from holydays.models import Holyday
 from permissions.models import Permission
-
+from users.models import User
 class RegisterView(APIView):
     @extend_schema(
         request=RegisterSerializer,
@@ -87,12 +88,18 @@ class CreateUserByRhView(APIView):
         user.set_password(random_password)
         user.save()
 
-        send_invitation_email(user.email, random_password)
+        sold = Sold(
+            user=user
+        )
+        sold.save()
+
+        # send_invitation_email(user.email, random_password)
 
         return Response({
             "message": "Utilisateur créé avec succès ✅",
             "email": user.email,
-            "generated_password": random_password
+            "generated_password": random_password,
+            "first_sold":sold.id
         }, status=status.HTTP_201_CREATED)
     
 class UpdateUserByRhView(APIView):
@@ -245,3 +252,54 @@ class StatusDistributionView(APIView):
             'permissions': permissions_stats
         })
 
+class StatusDistributionEmployeeView(APIView):
+    """
+    Retourne la répartition des congés et permissions par statut pour l'année en cours pour un user.
+    """
+    def get(self, request, pk):
+        current_year = now().year
+        user = get_object_or_404(User, pk=pk)
+        status_choices = ['pending', 'approved', 'rejected']
+
+        # Congés approuvés t@ty taoan ity
+        conges_stats = []
+        for status in status_choices:
+            count = Holyday.objects.filter(
+                status=status,
+                start_date__year=current_year,
+                user=user
+            ).count()
+            display_name = {
+                'pending': 'En attente',
+                'approved': 'Approuvées',
+                'rejected': 'Rejetées'
+            }.get(status, status)
+            conges_stats.append({
+                'name': display_name,
+                'value': count
+            })
+
+        # permission approuvés t@ty taoan ity
+        permissions_stats = []
+        for status in status_choices:
+            count = Permission.objects.filter(
+                status=status,
+                start_date__year=current_year,
+                user=user
+            ).count()
+            display_name = {
+                'pending': 'En attente',
+                'approved': 'Approuvées',
+                'rejected': 'Rejetées'
+            }.get(status, status)
+            permissions_stats.append({
+                'name': display_name,
+                'value': count
+            })
+
+        return Response({
+            'user':user.email,
+            'conges': conges_stats,
+            'permissions': permissions_stats
+        })
+    

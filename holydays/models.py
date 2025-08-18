@@ -1,9 +1,10 @@
 from django.db import models
 from baseModels.models import BaseModel
 from users.models import User
-from django.utils import timezone
+from solds.models import Sold
 class Holyday(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='holydays')
+    sold = models.ForeignKey(Sold, on_delete=models.CASCADE, related_name='holydays')
     request_date = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -14,7 +15,10 @@ class Holyday(BaseModel):
         choices=[('pending', 'En attente'), ('approved', 'Approuvé'), ('rejected', 'Rejeté')],
         default='pending'
     )
-    locale = models.CharField(max_length=10, default='fr')
+    type = models.CharField(
+        max_length=50,
+        choices=[('annual_leave', 'Congé annuelle'), ('special_leave', 'Congé exceptionnel')], 
+        default='annual_leave')
 
     def __str__(self) :
         return f"Conge demande le {self.request_date}, du {self.start_date} au {self.end_date}, total: {self.total} Jours , id :{self.id}"

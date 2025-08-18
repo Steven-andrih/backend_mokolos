@@ -4,7 +4,8 @@ from baseModels.models import BaseModel
 
 class Service(BaseModel):
     pass
-
+    def __str__(self):
+        return f"Service : {self.id}"
 class ServiceTranslation(BaseModel):
     translatable = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="translations")
     title = models.CharField(max_length=255)
