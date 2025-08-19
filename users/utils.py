@@ -12,7 +12,7 @@ def send_invitation_email(user_email, password_temp):
     context = {
         'email': user_email,
         'password': password_temp,
-        'login_link': 'http://localhost:3000'
+        'reset_password_link': 'http://localhost:3000/reset_password'
     }
 
     text_content = f"Votre mot de passe temporaire est : {password_temp}"

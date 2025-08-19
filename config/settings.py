@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
     'djoser',
@@ -185,6 +185,10 @@ DJOSER = {
     },
 }
 
+DOMAIN = "localhost:3000"  # ou vrai domaine de frontend
+SITE_NAME = "Mokolos Front"
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -193,7 +197,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'steevandrih@gmail.com'
-EMAIL_HOST_PASSWORD = 'pqou okfu dkdd gofc'  # ⚠️ celui généré par Google !
+EMAIL_HOST_PASSWORD = 'pqou okfu dkdd gofc'  # ⚠️ celui généré par Google ! ity ilay mot de passz d'app any google
 DEFAULT_FROM_EMAIL = 'steevandrih@gmail.com'
 
 TEMPLATES = [
